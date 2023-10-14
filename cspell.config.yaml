@@ -1,0 +1,10 @@
+words:
+  - reekystive
+  - compat
+flagWords:
+  - blacklist -> blocklist
+  - whitelist -> allowlist
+suggestWords:
+  - colour -> color
+ignorePaths:
+  - cspell.config.yaml
