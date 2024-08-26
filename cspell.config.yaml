@@ -9,3 +9,5 @@ suggestWords:
   - colour -> color
 ignorePaths:
   - cspell.config.yaml
+  - pnpm-lock.yaml
+  - node_modules
