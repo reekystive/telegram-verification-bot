@@ -1,13 +1,17 @@
-# Node.js TypeScript Template
+# Telegram Verification Bot
 
-TypeScript + ESLint + Prettier project template.
+A customizable verification bot designed for Telegram groups.
 
-## Before using this template
+This bot helps maintain the integrity of large public groups by
+verifying new members through a series of user-defined questions.
+New members must answer the questions correctly to gain access to
+the group; those who fail to do so are automatically banned.
+The bot is easy to set up and provides flexible options for creating
+and managing verification questions and answers.
 
-Use `npm-check-updates` to update the dependencies to the latest versions.
+## Quick Start Development
 
-```bash
-pnpx npm-check-updates -u
+```shell
+pnpm install
+pnpm run dev
 ```
-
-Remove `pnpm-lock.yaml` from `.gitignore`.
