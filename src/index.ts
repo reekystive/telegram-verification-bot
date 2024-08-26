@@ -1,8 +1,9 @@
+import { run } from '@grammyjs/runner';
 import { InlineKeyboard, session } from 'grammy';
 import { ignoreOld } from 'grammy-middlewares';
 import { bot } from './bot.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
-import './logger.js';
+import { logger } from './logger.js';
 import { createSessionData } from './middlewares.js';
 
 bot.use(ignoreOld(60)); // Ignore old updates (60 seconds)
@@ -88,6 +89,30 @@ bot.on('callback_query:data').filter(
   }
 );
 
-void bot.start({
-  allowed_updates: ['chat_member', 'message', 'callback_query'],
+const handle = run(bot, {
+  runner: {
+    fetch: {
+      allowed_updates: ['chat_member', 'message', 'callback_query'],
+    },
+  },
 });
+
+const stopRunner = async () => {
+  await handle.stop().then(() => {
+    logger.info('Bot stopped!');
+  });
+};
+
+process.on('SIGINT', () => {
+  logger.info('Received SIGINT (Ctrl+C). Exiting gracefully...');
+  void stopRunner();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  logger.info('Received SIGTERM. Exiting gracefully...');
+  void stopRunner();
+  process.exit(0);
+});
+
+logger.info('Bot running, PID: %o', process.pid);
