@@ -26,5 +26,10 @@
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0"
   },
-  "packageManager": "pnpm@9.8.0"
+  "packageManager": "pnpm@9.8.0",
+  "dependencies": {
+    "dotenv-flow": "^4.1.0",
+    "grammy": "^1.29.0",
+    "proxy-agent": "^6.4.0"
+  }
 }
