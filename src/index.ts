@@ -1,36 +1,7 @@
-import dotenvFlow from 'dotenv-flow';
-import type { Context, SessionFlavor } from 'grammy';
-import { Bot, InlineKeyboard, session } from 'grammy';
-import { ProxyAgent } from 'proxy-agent';
+import { InlineKeyboard, session } from 'grammy';
+import { bot } from './bot.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
-
-dotenvFlow.config();
-
-const proxyAgent = new ProxyAgent();
-
-interface BotConfig {
-  isDeveloper: boolean;
-}
-
-interface SessionData {
-  messageCount: number;
-}
-
-type MyContext = Context & {
-  config: BotConfig;
-} & SessionFlavor<SessionData>;
-
-function createSessionData(): SessionData {
-  return { messageCount: 0 };
-}
-
-const bot = new Bot<MyContext>(process.env.BOT_TOKEN, {
-  client: {
-    baseFetchConfig: {
-      agent: proxyAgent,
-    },
-  },
-});
+import { createSessionData } from './middlewares.js';
 
 bot.use(async (ctx, next) => {
   ctx.config = {
