@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --import tsx src/index.ts",
-    "start": "node dist/index.js",
+    "dev": "NODE_ENV=development node --import tsx src/index.ts",
+    "start": "NODE_ENV=production node dist/index.js",
     "build": "tsc --project tsconfig.json"
   },
   "devDependencies": {
@@ -31,6 +31,8 @@
     "dotenv-flow": "^4.1.0",
     "grammy": "^1.29.0",
     "grammy-middlewares": "^1.0.11",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "proxy-agent": "^6.4.0",
     "source-map-support": "^0.5.21"
   }

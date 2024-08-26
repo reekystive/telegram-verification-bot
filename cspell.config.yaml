@@ -1,6 +1,7 @@
 words:
-  - reekystive
   - compat
+  - pino
+  - reekystive
 flagWords:
   - blacklist -> blocklist
   - whitelist -> allowlist
