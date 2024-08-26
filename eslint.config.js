@@ -40,6 +40,7 @@ export default defineFlatConfig([
       ...prettierConfigs.rules,
       ...prettierPlugin.configs.recommended.rules,
       ...cSpellPlugin.configs.recommended.rules,
+      quotes: ['error', 'single', { avoidEscape: true }],
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

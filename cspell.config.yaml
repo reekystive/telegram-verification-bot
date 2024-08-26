@@ -3,6 +3,7 @@ words:
   - grammyjs
   - pino
   - reekystive
+  - sequentialize
 flagWords:
   - blacklist -> blocklist
   - whitelist -> allowlist

@@ -1,10 +1,11 @@
-import { run } from '@grammyjs/runner';
+import { conversations, createConversation } from '@grammyjs/conversations';
+import { run, sequentialize } from '@grammyjs/runner';
 import { InlineKeyboard, session } from 'grammy';
 import { ignoreOld } from 'grammy-middlewares';
 import { bot } from './bot.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
 import { logger } from './logger.js';
-import { createSessionData } from './middlewares.js';
+import { countMessageMiddleware, createSessionData, getSessionKey, movie } from './middlewares.js';
 
 bot.use(ignoreOld(60)); // Ignore old updates (60 seconds)
 
@@ -15,18 +16,19 @@ bot.use(async (ctx, next) => {
   await next();
 });
 
-bot.use(session({ initial: createSessionData }));
+bot.use(sequentialize(getSessionKey));
+bot.use(session({ initial: createSessionData, getSessionKey }));
+bot.on('message:text', countMessageMiddleware);
+
+bot.use(conversations());
+bot.use(createConversation(movie));
 
 await bot.api.setMyCommands([
   { command: 'start', description: 'Start the bot' },
   { command: 'help', description: 'Show help text' },
   { command: 'settings', description: 'Open settings' },
+  { command: 'movie', description: "What's your favorite movie?" },
 ]);
-
-bot.on('message:text', async (ctx, next) => {
-  ctx.session.messageCount = ctx.session.messageCount + 1;
-  await next();
-});
 
 bot.command('start', async (ctx) => {
   console.log('[start] %o', ctx.from?.username);
@@ -41,6 +43,10 @@ bot.command('help', async (ctx) => {
 bot.command('settings', async (ctx) => {
   console.log('[settings] %o', ctx.from?.username);
   await ctx.reply('Have fun.');
+});
+
+bot.command('movie', async (ctx) => {
+  await ctx.conversation.enter('movie');
 });
 
 bot.on('message:text').filter(
