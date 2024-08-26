@@ -98,21 +98,21 @@ const handle = run(bot, {
 });
 
 const stopRunner = async () => {
-  await handle.stop().then(() => {
-    logger.info('Bot stopped!');
-  });
+  await handle.stop();
 };
 
 process.on('SIGINT', () => {
   logger.info('Received SIGINT (Ctrl+C). Exiting gracefully...');
-  void stopRunner();
-  process.exit(0);
+  void stopRunner().then(() => {
+    process.exit(0);
+  });
 });
 
 process.on('SIGTERM', () => {
   logger.info('Received SIGTERM. Exiting gracefully...');
-  void stopRunner();
-  process.exit(0);
+  void stopRunner().then(() => {
+    process.exit(0);
+  });
 });
 
 logger.info('Bot running, PID: %o', process.pid);
