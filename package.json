@@ -30,6 +30,8 @@
   "dependencies": {
     "dotenv-flow": "^4.1.0",
     "grammy": "^1.29.0",
-    "proxy-agent": "^6.4.0"
+    "grammy-middlewares": "^1.0.11",
+    "proxy-agent": "^6.4.0",
+    "source-map-support": "^0.5.21"
   }
 }

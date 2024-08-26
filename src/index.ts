@@ -1,7 +1,10 @@
 import { InlineKeyboard, session } from 'grammy';
+import { ignoreOld } from 'grammy-middlewares';
 import { bot } from './bot.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
 import { createSessionData } from './middlewares.js';
+
+bot.use(ignoreOld(60)); // Ignore old updates (60 seconds)
 
 bot.use(async (ctx, next) => {
   ctx.config = {
