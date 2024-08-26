@@ -31,17 +31,17 @@ await bot.api.setMyCommands([
 ]);
 
 bot.command('start', async (ctx) => {
-  console.log('[start] %o', ctx.from?.username);
+  logger.info('[start] %o', ctx.from?.username);
   await ctx.reply('Welcome! Up and running.');
 });
 
 bot.command('help', async (ctx) => {
-  console.log('[help] %o', ctx.from?.username);
+  logger.info('[help] %o', ctx.from?.username);
   await ctx.reply('Developer: @reekystive');
 });
 
 bot.command('settings', async (ctx) => {
-  console.log('[settings] %o', ctx.from?.username);
+  logger.info('[settings] %o', ctx.from?.username);
   await ctx.reply('Have fun.');
 });
 
@@ -52,7 +52,7 @@ bot.command('movie', async (ctx) => {
 bot.on('message:text').filter(
   (ctx) => ctx.message.text === 'quiz',
   async (ctx) => {
-    console.log('[message:text=quiz] %o: %o', ctx.from.username, ctx.message.text);
+    logger.info('[message:text=quiz] %o: %o', ctx.from.username, ctx.message.text);
     const inlineKeyboard = new InlineKeyboard()
       .text('A', 'select-answer-a')
       .text('B', 'select-answer-b')
@@ -65,13 +65,13 @@ bot.on('message:text').filter(
 bot.on('message:text').filter(
   (ctx) => ctx.message.text === 'message-count',
   async (ctx) => {
-    console.log('[message:text=message-count] %o: %o', ctx.from.username, ctx.message.text);
+    logger.info('[message:text=message-count] %o: %o', ctx.from.username, ctx.message.text);
     await ctx.reply(`You have sent ${String(ctx.session.messageCount)} messages.`);
   }
 );
 
 bot.on('message:text', async (ctx) => {
-  console.log('[message:text] %o: %o', ctx.from.username, ctx.message.text);
+  logger.info('[message:text] %o: %o', ctx.from.username, ctx.message.text);
   await ctx.reply(`Hello ${String(ctx.update.message.from.username)}`, {
     reply_parameters: {
       message_id: ctx.message.message_id,
@@ -80,7 +80,7 @@ bot.on('message:text', async (ctx) => {
 });
 
 bot.on('chat_member', async (ctx) => {
-  console.log('chat_member', ctx);
+  logger.info('chat_member', ctx);
   const newChatMember = ctx.chatMember.new_chat_member.user;
   await ctx.reply(`欢迎 @${String(newChatMember.username)} 加入！你需要在 5 分钟之内完成验证。`);
   await ctx.restrictChatMember(newChatMember.id, {
@@ -91,7 +91,7 @@ bot.on('chat_member', async (ctx) => {
 bot.on('callback_query:data').filter(
   (ctx) => ctx.callbackQuery.data.startsWith('select-answer-'),
   async (ctx) => {
-    console.log('[callback_query:data=select-answer] %o: %o', ctx.from.username, ctx.callbackQuery.data);
+    logger.info('[callback_query:data=select-answer] %o: %o', ctx.from.username, ctx.callbackQuery.data);
   }
 );
 
