@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development node --import tsx src/index.ts",
+    "dev": "NODE_ENV=development nodemon -w src --exec node --import tsx src/index.ts",
     "start": "NODE_ENV=production node dist/index.js",
     "build": "tsc --project tsconfig.json"
   },
@@ -20,6 +20,7 @@
     "eslint-define-config": "^2.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
+    "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0",
     "tsx": "^4.18.0",
