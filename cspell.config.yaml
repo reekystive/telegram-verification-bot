@@ -1,6 +1,7 @@
 words:
   - compat
   - grammyjs
+  - lowdb
   - pino
   - reekystive
   - sequentialize

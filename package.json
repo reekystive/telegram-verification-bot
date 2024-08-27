@@ -33,6 +33,7 @@
     "dotenv-flow": "^4.1.0",
     "grammy": "^1.29.0",
     "grammy-middlewares": "^1.0.11",
+    "lowdb": "^7.0.1",
     "pino": "^9.3.2",
     "pino-pretty": "^11.2.2",
     "proxy-agent": "^6.4.0",
