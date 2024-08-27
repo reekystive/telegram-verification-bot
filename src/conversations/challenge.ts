@@ -30,28 +30,29 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
     logger.warn('ctx.from is undefined');
     return;
   }
+  const newChatMember = ctx.chatMember?.new_chat_member.user ?? null;
   if (ctx.chatMember?.new_chat_member.user.id === undefined) {
     logger.warn('ctx.chatMember.new_chat_member.user.id is undefined');
-    return;
   }
 
-  const newChatMember = ctx.chatMember.new_chat_member.user;
-  await ctx.restrictChatMember(newChatMember.id, {
-    can_send_messages: false,
-    can_add_web_page_previews: false,
-    can_change_info: false,
-    can_invite_users: false,
-    can_manage_topics: false,
-    can_pin_messages: false,
-    can_send_audios: false,
-    can_send_documents: false,
-    can_send_other_messages: false,
-    can_send_photos: false,
-    can_send_polls: false,
-    can_send_video_notes: false,
-    can_send_videos: false,
-    can_send_voice_notes: false,
-  });
+  if (newChatMember !== null) {
+    await ctx.restrictChatMember(newChatMember.id, {
+      can_send_messages: false,
+      can_add_web_page_previews: false,
+      can_change_info: false,
+      can_invite_users: false,
+      can_manage_topics: false,
+      can_pin_messages: false,
+      can_send_audios: false,
+      can_send_documents: false,
+      can_send_other_messages: false,
+      can_send_photos: false,
+      can_send_polls: false,
+      can_send_video_notes: false,
+      can_send_videos: false,
+      can_send_voice_notes: false,
+    });
+  }
 
   const randomFn = conversation.random.bind(conversation);
   const joinedAt = await conversation.now();
@@ -98,7 +99,7 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
     );
 
     cLogger.debug('问题已发送, 等待回答');
-    const chooseId = await conversation.waitForCallbackQuery(
+    const chooseCtx = await conversation.waitForCallbackQuery(
       [...shuffledAnswers.map((answer) => answer.temporaryId), 'another'],
       {
         otherwise: async () => {
@@ -106,37 +107,40 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
         },
       }
     );
+    await chooseCtx.answerCallbackQuery();
 
-    cLogger.debug('选择了 %s', chooseId.match);
+    cLogger.debug('选择了 %s', chooseCtx.match);
 
-    if (chooseId.match === 'another') {
+    if (chooseCtx.match === 'another') {
       await ctx.reply('好的，我们来换一个题目看看');
       continue;
     }
 
-    const answer = shuffledAnswers.find((answer) => answer.temporaryId === chooseId.match);
+    const answer = shuffledAnswers.find((answer) => answer.temporaryId === chooseCtx.match);
     if (answer === undefined) {
       throw new Error('answer is undefined');
     }
     if (answer.isCorrect) {
       cLogger.debug('回答正确. 选择: %s', ctx.from.username, truncate(answer.answer, { length: 10 }));
       await ctx.reply('回答正确！你已通过验证，现在可以正常发言!');
-      await ctx.restrictChatMember(newChatMember.id, {
-        can_send_messages: true,
-        can_add_web_page_previews: true,
-        can_change_info: true,
-        can_invite_users: true,
-        can_manage_topics: true,
-        can_pin_messages: true,
-        can_send_audios: true,
-        can_send_documents: true,
-        can_send_other_messages: true,
-        can_send_photos: true,
-        can_send_polls: true,
-        can_send_video_notes: true,
-        can_send_videos: true,
-        can_send_voice_notes: true,
-      });
+      if (newChatMember !== null) {
+        await ctx.restrictChatMember(newChatMember.id, {
+          can_send_messages: true,
+          can_add_web_page_previews: true,
+          can_change_info: true,
+          can_invite_users: true,
+          can_manage_topics: true,
+          can_pin_messages: true,
+          can_send_audios: true,
+          can_send_documents: true,
+          can_send_other_messages: true,
+          can_send_photos: true,
+          can_send_polls: true,
+          can_send_video_notes: true,
+          can_send_videos: true,
+          can_send_voice_notes: true,
+        });
+      }
       return;
     } else {
       cLogger.debug('回答错误. 选择: %s', ctx.from.username, truncate(answer.answer, { length: 10 }));
