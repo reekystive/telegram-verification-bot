@@ -24,7 +24,7 @@ const challengeYamlUrl = new URL('challenges.yaml', configDirUrl);
 const challengeLocalYamlUrl = new URL('challenges.local.yaml', configDirUrl);
 
 let challengesYamlUrl: URL;
-if (process.env.NODE_ENV === 'development' && existsSync(challengeLocalYamlUrl)) {
+if (existsSync(challengeLocalYamlUrl)) {
   challengesYamlUrl = challengeLocalYamlUrl;
 } else {
   challengesYamlUrl = challengeYamlUrl;
