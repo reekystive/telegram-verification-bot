@@ -2,10 +2,11 @@ import type pino from 'pino';
 import type { MyConversation } from './context.js';
 import { logger } from './logger.js';
 
-export const createConversationLogger = (conversation: MyConversation) => {
+export const createConversationLogger = (conversation: MyConversation, prefix?: string) => {
+  const formattedPrefix = prefix ? `[${prefix}] ` : '';
   const createWrappedLogFn = (logFn: pino.LogFn) => {
     return (msg: string, ...args: unknown[]) => {
-      void conversation.external(() => logFn(msg, ...args));
+      void conversation.external(() => logFn(formattedPrefix + msg, ...args));
     };
   };
   const conversationLogger = {

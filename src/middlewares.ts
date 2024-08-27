@@ -1,10 +1,10 @@
-import type { Context, NextFunction } from 'grammy';
+import { type Context, type NextFunction } from 'grammy';
 import type { MyContext, MyConversation, SessionData } from './context.js';
 import { logger } from './logger.js';
 import { createConversationLogger } from './utils.js';
 
 export function createSessionData(): SessionData {
-  return { messageCount: 0 };
+  return { messageCount: 0, joinedAt: undefined };
 }
 
 export function getSessionKey(ctx: Context): string | undefined {
@@ -23,14 +23,17 @@ export async function movie(conversation: MyConversation, ctx: MyContext) {
   await ctx.reply('你有多少部最喜欢的电影？');
   const count = await conversation.form.number();
   const movies: string[] = [];
+  console.log(movies);
   for (let i = 0; i < count; i++) {
     cLogger.debug(`告诉我第 ${i + 1} 名！`);
     await ctx.reply(`告诉我第 ${i + 1} 名！`);
     const titleCtx = await conversation.waitFor(':text');
     movies.push(titleCtx.msg.text);
+    console.log(movies);
   }
   cLogger.debug('这里有一个更好的排名！');
   await ctx.reply('这里有一个更好的排名！');
   movies.sort();
+  console.log(movies);
   await ctx.reply(movies.map((m, i) => `${i + 1}. ${m}`).join('\n'));
 }

@@ -11,6 +11,7 @@ export interface CustomFlavor {
 
 export interface SessionData {
   messageCount: number;
+  joinedAt?: number;
 }
 
 export type MyContext = Context & CustomFlavor & SessionFlavor<SessionData> & ConversationFlavor;

@@ -1,11 +1,11 @@
 import { conversations, createConversation } from '@grammyjs/conversations';
-import { Menu } from '@grammyjs/menu';
 import { run, sequentialize } from '@grammyjs/runner';
 import { InlineKeyboard, session } from 'grammy';
 import { ignoreOld } from 'grammy-middlewares';
 import { bot } from './bot.js';
 import { challenges } from './config.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
+import { challengeNewUser } from './conversations/challenge.js';
 import { logger } from './logger.js';
 import { countMessageMiddleware, createSessionData, getSessionKey, movie } from './middlewares.js';
 
@@ -25,30 +25,16 @@ bot.use(session({ initial: createSessionData, getSessionKey }));
 bot.on('message:text', countMessageMiddleware);
 
 bot.use(conversations());
-bot.use(createConversation(movie));
+bot.use(createConversation(movie, 'movie'));
+bot.use(createConversation(challengeNewUser, 'challenge-new-user'));
 
 await bot.api.setMyCommands([
   { command: 'start', description: 'Start the bot' },
   { command: 'help', description: 'Show help text' },
   { command: 'settings', description: 'Open settings' },
   { command: 'movie', description: "What's your favorite movie?" },
-  { command: 'menu', description: 'Show fantastic menu' },
+  { command: 'join', description: 'Emulate a user joining a group chat' },
 ]);
-
-const menu = new Menu('my-menu-identifier')
-  .text('A', (ctx) => ctx.reply('You pressed A!'))
-  .text('B', (ctx) => ctx.reply('You pressed B!'))
-  .text('C', (ctx) => ctx.reply('You pressed C!'))
-  .text('Close', async (ctx) => {
-    await ctx.editMessageText('Menu closed!');
-    ctx.menu.close();
-  });
-
-bot.use(menu);
-
-bot.command('menu', async (ctx) => {
-  await ctx.reply('Choose your favorite option:', { reply_markup: menu });
-});
 
 bot.command('start', async (ctx) => {
   logger.info('[start] %o', ctx.from?.username);
@@ -67,6 +53,10 @@ bot.command('settings', async (ctx) => {
 
 bot.command('movie', async (ctx) => {
   await ctx.conversation.enter('movie');
+});
+
+bot.command('join').on('message:text', async (ctx) => {
+  await ctx.conversation.enter('challenge-new-user');
 });
 
 bot.on('message:text').filter(
