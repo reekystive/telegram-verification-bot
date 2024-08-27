@@ -30,6 +30,7 @@
   "packageManager": "pnpm@9.8.0",
   "dependencies": {
     "@grammyjs/conversations": "^1.2.0",
+    "@grammyjs/menu": "^1.2.2",
     "@grammyjs/runner": "^2.0.3",
     "dotenv-flow": "^4.1.0",
     "grammy": "^1.29.0",

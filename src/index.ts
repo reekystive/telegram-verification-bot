@@ -1,4 +1,5 @@
 import { conversations, createConversation } from '@grammyjs/conversations';
+import { Menu } from '@grammyjs/menu';
 import { run, sequentialize } from '@grammyjs/runner';
 import { InlineKeyboard, session } from 'grammy';
 import { ignoreOld } from 'grammy-middlewares';
@@ -31,7 +32,23 @@ await bot.api.setMyCommands([
   { command: 'help', description: 'Show help text' },
   { command: 'settings', description: 'Open settings' },
   { command: 'movie', description: "What's your favorite movie?" },
+  { command: 'menu', description: 'Show fantastic menu' },
 ]);
+
+const menu = new Menu('my-menu-identifier')
+  .text('A', (ctx) => ctx.reply('You pressed A!'))
+  .text('B', (ctx) => ctx.reply('You pressed B!'))
+  .text('C', (ctx) => ctx.reply('You pressed C!'))
+  .text('Close', async (ctx) => {
+    await ctx.editMessageText('Menu closed!');
+    ctx.menu.close();
+  });
+
+bot.use(menu);
+
+bot.command('menu', async (ctx) => {
+  await ctx.reply('Choose your favorite option:', { reply_markup: menu });
+});
 
 bot.command('start', async (ctx) => {
   logger.info('[start] %o', ctx.from?.username);
