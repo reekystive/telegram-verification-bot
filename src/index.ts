@@ -89,17 +89,24 @@ bot.on('message:text', async (ctx) => {
   });
 });
 
+bot.on('chat_member', async (ctx, next) => {
+  logger.info(
+    '[chat_member] %o old: %o new: %o',
+    ctx.chatMember.new_chat_member.user.username,
+    ctx.chatMember.old_chat_member.status,
+    ctx.chatMember.new_chat_member.status
+  );
+  await next();
+});
+
 bot
   .on('chat_member')
   .filter((ctx) => ctx.chatMember.old_chat_member.status === 'left')
   .filter((ctx) => ctx.chatMember.new_chat_member.status === 'member')
+  .filter((ctx) => ctx.chatMember.new_chat_member.user.id === ctx.from.id) // 排除邀请他人的情况
   .use(async (ctx) => {
     logger.info('chat_member', ctx);
-    const newChatMember = ctx.chatMember.new_chat_member.user;
-    await ctx.reply(`欢迎 @${String(newChatMember.username)} 加入！你需要在 5 分钟之内完成验证。`);
-    await ctx.restrictChatMember(newChatMember.id, {
-      can_send_messages: false,
-    });
+    await ctx.conversation.enter('challenge-new-user');
   });
 
 bot.on('callback_query:data').filter(
