@@ -10,6 +10,9 @@ properties:
     items:
       type: object
       properties:
+        rows:
+          type: number
+          description: Keyboards rows
         question:
           type: string
           description: Question
@@ -22,6 +25,7 @@ properties:
             type: string
           description: Incorrect answers
       required:
+        - rows
         - question
         - correct_answer
         - incorrect_answers

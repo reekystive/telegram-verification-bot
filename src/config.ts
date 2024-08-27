@@ -10,6 +10,7 @@ interface RawChallenge {
   correct_answer: string;
   incorrect_answers: string[];
   question: string;
+  rows: number;
 }
 
 interface RawChallenges {

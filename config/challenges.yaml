@@ -3,6 +3,7 @@
 challenges:
   - question: 本群的主要讨论主题是什么？
     correct_answer: 科技
+    rows: 2
     incorrect_answers:
       - 美食
       - 运动
@@ -10,6 +11,7 @@ challenges:
 
   - question: 2 + 2 等于多少？
     correct_answer: '4'
+    rows: 1
     incorrect_answers:
       - '3'
       - '5'
@@ -17,6 +19,7 @@ challenges:
 
   - question: 请输入暗号。
     correct_answer: 芝麻开门
+    rows: 2
     incorrect_answers:
       - 魔法咒语
       - 开门见山
@@ -24,6 +27,7 @@ challenges:
 
   - question: 晴天时，天空的颜色是什么？
     correct_answer: 蓝色
+    rows: 2
     incorrect_answers:
       - 绿色
       - 红色
@@ -31,6 +35,7 @@ challenges:
 
   - question: 以下哪种动物是哺乳动物？
     correct_answer: 狗
+    rows: 2
     incorrect_answers:
       - 鲨鱼
       - 青蛙

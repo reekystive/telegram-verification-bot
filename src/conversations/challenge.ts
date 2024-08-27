@@ -40,9 +40,8 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
   cLogger.debug('加入了聊天', ctx.from.username);
 
   await ctx.reply(
-    `欢迎 @${ctx.from.username} 加入！你需要在 5 分钟之内完成验证。回答问题以解除发言限制，你有 3 次机会。`
+    `欢迎 @${ctx.from.username} 加入！你需要在 3 分钟之内完成身份验证，正确回答任意问题以解除发言限制。你有 3 次机会，每个问题只能回答一次。`
   );
-  await ctx.reply('[emulation] 你已被禁止发言');
 
   const challengeCount = 3;
   const selectedChallenges = await sampleSize(randomFn, challenges, challengeCount);
@@ -54,20 +53,31 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
     );
   });
 
-  for (const challenge of selectedChallenges) {
+  for (const [index, challenge] of selectedChallenges.entries()) {
     cLogger.debug('当前问题: %s', truncate(challenge.question, { length: 20 }));
     const keyboard = new InlineKeyboard();
     const shuffledAnswers = await getQuestionOptions(challenge, randomFn);
     for (const { answer, temporaryId } of shuffledAnswers) {
       keyboard.text(answer, temporaryId);
     }
-    await ctx.reply(challenge.question, {
-      reply_markup: keyboard,
-    });
+    keyboard.row();
+    const isLast = challengeCount - index == 1;
+    if (!isLast) {
+      keyboard.text('不晓得，换一道', 'another');
+    }
+    const remain = isLast ? '*这是你最后的机会。*' : `你还可以回答 ${challengeCount - index} 次。`;
+    const mention = ctx.from.username ? `@${ctx.from.username}\n\n` : '';
+    await ctx.reply(
+      `${mention}*${challenge.question}*\n\n点击下方的按钮来回答此问题。\n注意，每道题目只有 1 次选择机会。${remain}`,
+      {
+        reply_markup: keyboard,
+        parse_mode: 'MarkdownV2',
+      }
+    );
 
     cLogger.debug('问题已发送, 等待回答');
     const chooseId = await conversation.waitForCallbackQuery(
-      shuffledAnswers.map((answer) => answer.temporaryId),
+      [...shuffledAnswers.map((answer) => answer.temporaryId), 'another'],
       {
         otherwise: async () => {
           cLogger.warn('非法选项');
@@ -76,14 +86,19 @@ export async function challengeNewUser(conversation: MyConversation, ctx: MyCont
     );
 
     cLogger.debug('选择了 %s', chooseId.match);
+
+    if (chooseId.match === 'another') {
+      await ctx.reply('好的，我们来换一个题目看看');
+      continue;
+    }
+
     const answer = shuffledAnswers.find((answer) => answer.temporaryId === chooseId.match);
     if (answer === undefined) {
       throw new Error('answer is undefined');
     }
     if (answer.isCorrect) {
       cLogger.debug('回答正确. 选择: %s', ctx.from.username, truncate(answer.answer, { length: 10 }));
-      await ctx.reply('回答正确！');
-      await ctx.reply('[emulation] 你现在可以正常发言!');
+      await ctx.reply('回答正确！你已通过验证，现在可以正常发言!');
       return;
     } else {
       cLogger.debug('回答错误. 选择: %s', ctx.from.username, truncate(answer.answer, { length: 10 }));
