@@ -8,8 +8,8 @@ import { DataFile } from 'lowdb/node';
 
 interface RawChallenge {
   correct_answer: string;
-  incorrect_answers: boolean;
-  question: boolean;
+  incorrect_answers: string[];
+  question: string;
 }
 
 interface RawChallenges {
