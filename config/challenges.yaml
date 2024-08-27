@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=./challenges.schema.yaml
+
+challenges:
+  - question: 本群的主要讨论主题是什么？
+    correct_answer: 科技
+    incorrect_answers:
+      - 美食
+      - 运动
+      - 时尚
+
+  - question: 2 + 2 等于多少？
+    correct_answer: '4'
+    incorrect_answers:
+      - '3'
+      - '5'
+      - '22'
+
+  - question: 请输入暗号。
+    correct_answer: 芝麻开门
+    incorrect_answers:
+      - 魔法咒语
+      - 开门见山
+      - 万事如意
+
+  - question: 晴天时，天空的颜色是什么？
+    correct_answer: 蓝色
+    incorrect_answers:
+      - 绿色
+      - 红色
+      - 黄色
+
+  - question: 以下哪种动物是哺乳动物？
+    correct_answer: 狗
+    incorrect_answers:
+      - 鲨鱼
+      - 青蛙
+      - 老鹰

@@ -3,9 +3,12 @@ import { run, sequentialize } from '@grammyjs/runner';
 import { InlineKeyboard, session } from 'grammy';
 import { ignoreOld } from 'grammy-middlewares';
 import { bot } from './bot.js';
+import { challenges } from './config.js';
 import { BOT_DEVELOPER_USERNAME } from './constants.js';
 import { logger } from './logger.js';
 import { countMessageMiddleware, createSessionData, getSessionKey, movie } from './middlewares.js';
+
+logger.info('Parsed challenges: %o', challenges.length);
 
 bot.use(ignoreOld(60)); // Ignore old updates (60 seconds)
 

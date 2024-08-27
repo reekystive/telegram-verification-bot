@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=http://json-schema.org/draft-07/schema#
+
+title: Challenges Schema
+
+type: object
+
+properties:
+  challenges:
+    type: array
+    items:
+      type: object
+      properties:
+        question:
+          type: string
+          description: Question
+        correct_answer:
+          type: string
+          description: Correct answer
+        incorrect_answers:
+          type: array
+          items:
+            type: string
+          description: Incorrect answers
+      required:
+        - question
+        - correct_answer
+        - incorrect_answers
+
+required:
+  - challenges
